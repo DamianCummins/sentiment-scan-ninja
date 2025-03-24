@@ -1,0 +1,12 @@
+
+version: '3.8'
+
+services:
+  sentiment-analysis-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    restart: always
+    container_name: sentiment-analysis-frontend

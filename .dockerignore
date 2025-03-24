@@ -1,0 +1,30 @@
+
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build files
+dist
+build
+.DS_Store
+
+# Git and editor files
+.git
+.github
+.gitignore
+.vscode
+.idea
+*.md
+!README.md
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+tmp
+temp
