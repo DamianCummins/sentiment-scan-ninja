@@ -7,7 +7,7 @@ REMOTE_USER="rocky"
 REMOTE_HOST="ai-tools-dev-1.inst.nlp-dev.eu-west-1.bdf-cloud.iqvia.net"
 SSH_KEY="~/.ssh/express2.pem"
 REMOTE_APP_DIR="~/sentiment-analysis-app-lovable"
-CONTAINER_NAME="sentiment-analysis-frontend"
+CONTAINER_NAME="sentiment-analysis-frontend-lovable"
 
 echo "=== Sentiment Analysis App Deployment ==="
 

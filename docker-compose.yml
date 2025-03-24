@@ -9,4 +9,5 @@ services:
     ports:
       - "3002:3002"
     restart: always
-    container_name: sentiment-analysis-frontend
+    container_name: sentiment-analysis-frontend-lovable
+
