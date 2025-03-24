@@ -35,4 +35,5 @@ export interface UploadProgress {
   progress: number;
   total: number;
   isComplete: boolean;
+  progressCallback?: (onProgress: (data: UploadProgress) => void) => Promise<void>;
 }

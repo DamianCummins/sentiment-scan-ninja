@@ -1,7 +1,7 @@
 
 import React, { useRef, useState } from 'react';
 import { Upload } from 'lucide-react';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 import { UploadProgress } from '@/types';
 import { apiService } from '@/services/api';
 import ProgressBar from './ProgressBar';
@@ -31,13 +31,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadComplete }) => {
     try {
       setUploading(true);
       
-      // Simulate the generator with async iteration
-      const uploadAsync = async function* () {
-        yield* apiService.uploadFile(file);
-      };
+      const initialProgress = await apiService.uploadFile(file);
       
-      // Process the progress updates
-      for await (const progress of uploadAsync()) {
+      // This function will be called for each progress update
+      const handleProgress = (progress: UploadProgress) => {
         setUploadProgress(progress);
         
         if (progress.isComplete) {
@@ -48,6 +45,20 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadComplete }) => {
             if (fileInputRef.current) fileInputRef.current.value = '';
           }, 500);
         }
+      };
+      
+      // If progressCallback exists, use it to track progress
+      if ('progressCallback' in initialProgress) {
+        await initialProgress.progressCallback(handleProgress);
+      } else {
+        // Fallback in case progressCallback doesn't exist
+        setUploadProgress(initialProgress);
+        setTimeout(() => {
+          setUploading(false);
+          setUploadProgress(null);
+          onUploadComplete();
+          if (fileInputRef.current) fileInputRef.current.value = '';
+        }, 500);
       }
     } catch (error) {
       toast.error(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);

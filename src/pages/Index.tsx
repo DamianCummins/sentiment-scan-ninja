@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { File, FileAnalysis } from '@/types';
 import { apiService } from '@/services/api';
@@ -8,7 +7,7 @@ import SentimentSummary from '@/components/SentimentSummary';
 import TweetList from '@/components/TweetList';
 import ProgressBar from '@/components/ProgressBar';
 import { Loader2 } from 'lucide-react';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 const Index = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

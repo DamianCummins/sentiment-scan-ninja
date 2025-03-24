@@ -1,6 +1,5 @@
-
 import { File, FileAnalysis, SentimentType, Tweet, UploadProgress } from '@/types';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 // Simulate API delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -137,7 +136,7 @@ export const apiService = {
   },
   
   // Upload a new file
-  uploadFile: async (file: File): Promise<UploadProgress> => {
+  uploadFile: async (file: globalThis.File): Promise<UploadProgress> => {
     if (!file.name.endsWith('.csv')) {
       throw new Error('Only CSV files are allowed.');
     }
@@ -147,38 +146,42 @@ export const apiService = {
     
     let progress = 0;
     
-    for (let i = 0; i < progressUpdates; i++) {
-      await delay(700);
-      progress = Math.min((i + 1) / progressUpdates, 1) * fileSize;
-      
-      // Simulate progress updates
-      const progressData: UploadProgress = {
-        file: file.name,
-        progress,
-        total: fileSize,
-        isComplete: i === progressUpdates - 1
-      };
-      
-      // If it's the last update, add the file to mockFiles
-      if (i === progressUpdates - 1) {
-        const newFile = {
-          id: (mockFiles.length + 1).toString(),
-          name: file.name,
-          size: fileSize,
-          uploadedAt: new Date()
+    // Create a progress callback that can be used to report progress
+    const progressCallback = async (onProgress: (data: UploadProgress) => void) => {
+      for (let i = 0; i < progressUpdates; i++) {
+        await delay(700);
+        progress = Math.min((i + 1) / progressUpdates, 1) * fileSize;
+        
+        // Simulate progress updates
+        const progressData: UploadProgress = {
+          file: file.name,
+          progress,
+          total: fileSize,
+          isComplete: i === progressUpdates - 1
         };
-        mockFiles.push(newFile);
-        toast.success(`File ${file.name} uploaded successfully!`);
+        
+        // If it's the last update, add the file to mockFiles
+        if (i === progressUpdates - 1) {
+          const newFile = {
+            id: (mockFiles.length + 1).toString(),
+            name: file.name,
+            size: fileSize,
+            uploadedAt: new Date()
+          };
+          mockFiles.push(newFile);
+          toast.success(`File ${file.name} uploaded successfully!`);
+        }
+        
+        onProgress(progressData);
       }
-      
-      yield progressData;
-    }
+    };
     
     return {
       file: file.name,
       progress: fileSize,
       total: fileSize,
-      isComplete: true
+      isComplete: true,
+      progressCallback
     };
   }
 };
